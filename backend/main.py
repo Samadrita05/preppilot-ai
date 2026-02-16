@@ -21,3 +21,7 @@ app.include_router(interview.router)
 app.include_router(question.router)
 app.include_router(answer.router)
 app.include_router(report.router)
+@app.get("/")
+def home():
+    return {"message": "PrepPilot Backend is running successfully 🚀"}
+
