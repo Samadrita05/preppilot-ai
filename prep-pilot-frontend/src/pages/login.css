@@ -1,0 +1,146 @@
+/* PAGE BACKGROUND */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f4ff, #f8fafc);
+  padding: 20px;
+}
+
+/* CARD */
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.brand-header {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 60px;
+  color: #111827;
+  letter-spacing: 0.5px;
+}
+
+.brand-header span {
+  color: #4f46e5;
+}
+
+/* HEADINGS */
+.welcome-title {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+/* INPUTS */
+.input-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  color: #666;
+}
+
+.eye-icon:hover {
+  color: #000;
+}
+
+
+/* BUTTON */
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.login-card button:hover {
+  background: #4f46e5;
+}
+
+.login-card button:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* ERROR */
+.error-box {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* FOOTER */
+.footer-text {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 15px;
+  color: #1b293d;
+}
+
+.footer-text span {
+  color: #6366f1;
+  font-weight: 600;
+  cursor: pointer;
+}
