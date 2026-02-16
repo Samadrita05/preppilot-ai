@@ -43,7 +43,7 @@ export default function Report() {
     const token = localStorage.getItem("token");
 
     const response = await fetch(
-      `http://127.0.0.1:8000/reports/interview/${interviewId}/pdf`,
+      `https://preppilot-backend.onrender.com/reports/interview/${interviewId}/pdf`,
       {
         method: "GET",
         headers: {
