@@ -1,7 +1,11 @@
+from database.db import engine
+from database.models import Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+Base.metadata.create_all(bind=engine)
+
 
 origins = [
     "http://localhost:5173",
