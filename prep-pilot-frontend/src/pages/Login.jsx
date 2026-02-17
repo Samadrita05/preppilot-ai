@@ -18,17 +18,17 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const formData = new URLSearchParams();
-      formData.append("username", email); // OAuth2 expects "username"
-      formData.append("password", password);
-
       const res = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: formData,
-      });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email,
+    password,
+  }),
+});
+
 
       const data = await res.json();
 
