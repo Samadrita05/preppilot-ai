@@ -1,5 +1,4 @@
-from database.db import engine
-from database.models import Base
+from database.db import engine, Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
