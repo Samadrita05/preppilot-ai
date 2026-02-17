@@ -5,6 +5,7 @@ from reportlab.platypus import Paragraph
 from reportlab.lib.colors import HexColor
 from io import BytesIO
 from database.models import Answer
+import html  # ✅ IMPORTANT (fix for C code parsing issue)
 
 # ================= COLORS =================
 PRIMARY = HexColor("#2563eb")
@@ -51,11 +52,13 @@ def draw_box(pdf, x, y, w, h):
     pdf.roundRect(x, y - h, w, h, 12, fill=1, stroke=0)
     pdf.restoreState()
 
+
 def draw_paragraph(pdf, text, x, y, max_width, style):
     p = Paragraph(text, style)
     _, h = p.wrap(max_width, 800)
     p.drawOn(pdf, x, y - h)
     return y - h - 6
+
 
 # ================= MAIN =================
 def generate_interview_pdf(interview, questions, overall_verdict, db):
@@ -82,6 +85,7 @@ def generate_interview_pdf(interview, questions, overall_verdict, db):
 
     # ================= QUESTIONS =================
     for idx, q in enumerate(questions, start=1):
+
         if y < 240:
             pdf.showPage()
             y = height - 50
@@ -96,19 +100,74 @@ def generate_interview_pdf(interview, questions, overall_verdict, db):
         content_start = y - 20
         temp_y = content_start
 
-        temp_y = draw_paragraph(pdf, f"Q{idx}. {q.content}", 55, temp_y, width - 110, QUESTION_STYLE)
-        temp_y = draw_paragraph(pdf, f"<b>Your Answer:</b> {answer.user_answer if answer else 'Not answered'}", 55, temp_y, width - 110, NORMAL_STYLE)
-        temp_y = draw_paragraph(pdf, f"<b>Score:</b> {answer.score}/10" if answer and answer.score is not None else "<b>Score:</b> N/A", 55, temp_y, width - 110, NORMAL_STYLE)
-        temp_y = draw_paragraph(pdf, f"<b>Feedback:</b> {answer.feedback}" if answer and answer.feedback else "<b>Feedback:</b> No feedback", 55, temp_y, width - 110, NORMAL_STYLE)
+        # Escape dynamic content to prevent HTML parsing crash
+        safe_answer = html.escape(answer.user_answer) if answer and answer.user_answer else "Not answered"
+        safe_feedback = html.escape(answer.feedback) if answer and answer.feedback else "No feedback"
+
+        # First pass (calculate box height)
+        temp_y = draw_paragraph(pdf, f"Q{idx}. {html.escape(q.content)}", 55, temp_y, width - 110, QUESTION_STYLE)
+
+        temp_y = draw_paragraph(
+            pdf,
+            f"<b>Your Answer:</b> {safe_answer}",
+            55,
+            temp_y,
+            width - 110,
+            NORMAL_STYLE
+        )
+
+        temp_y = draw_paragraph(
+            pdf,
+            f"<b>Score:</b> {answer.score}/10" if answer and answer.score is not None else "<b>Score:</b> N/A",
+            55,
+            temp_y,
+            width - 110,
+            NORMAL_STYLE
+        )
+
+        temp_y = draw_paragraph(
+            pdf,
+            f"<b>Feedback:</b> {safe_feedback}",
+            55,
+            temp_y,
+            width - 110,
+            NORMAL_STYLE
+        )
 
         box_height = (y - temp_y) + 25
         draw_box(pdf, 40, y, width - 80, box_height)
 
+        # Second pass (actual drawing)
         temp_y = content_start
-        temp_y = draw_paragraph(pdf, f"Q{idx}. {q.content}", 55, temp_y, width - 110, QUESTION_STYLE)
-        temp_y = draw_paragraph(pdf, f"<b>Your Answer:</b> {answer.user_answer if answer else 'Not answered'}", 55, temp_y, width - 110, NORMAL_STYLE)
-        temp_y = draw_paragraph(pdf, f"<b>Score:</b> {answer.score}/10" if answer and answer.score is not None else "<b>Score:</b> N/A", 55, temp_y, width - 110, NORMAL_STYLE)
-        draw_paragraph(pdf, f"<b>Feedback:</b> {answer.feedback}" if answer and answer.feedback else "<b>Feedback:</b> No feedback", 55, temp_y, width - 110, NORMAL_STYLE)
+
+        temp_y = draw_paragraph(pdf, f"Q{idx}. {html.escape(q.content)}", 55, temp_y, width - 110, QUESTION_STYLE)
+
+        temp_y = draw_paragraph(
+            pdf,
+            f"<b>Your Answer:</b> {safe_answer}",
+            55,
+            temp_y,
+            width - 110,
+            NORMAL_STYLE
+        )
+
+        temp_y = draw_paragraph(
+            pdf,
+            f"<b>Score:</b> {answer.score}/10" if answer and answer.score is not None else "<b>Score:</b> N/A",
+            55,
+            temp_y,
+            width - 110,
+            NORMAL_STYLE
+        )
+
+        draw_paragraph(
+            pdf,
+            f"<b>Feedback:</b> {safe_feedback}",
+            55,
+            temp_y,
+            width - 110,
+            NORMAL_STYLE
+        )
 
         y -= box_height + 25
 
@@ -121,9 +180,10 @@ def generate_interview_pdf(interview, questions, overall_verdict, db):
     pdf.drawString(50, y, "Overall AI Verdict")
     y -= 25
 
-    text = (overall_verdict or "").replace("**", "").strip()
+    text = html.escape((overall_verdict or "").replace("**", "").strip())
 
     sections = []
+
     def split_section(label, src):
         if label in src:
             before, after = src.split(label, 1)
