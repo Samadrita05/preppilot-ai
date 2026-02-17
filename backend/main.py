@@ -1,6 +1,7 @@
-from database.db import engine, Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from database.db import engine, Base
+from database import models
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
