@@ -109,13 +109,6 @@ VITE_API_URL=http://127.0.0.1:8000
 
 ---
 
-## 🌍 Live Demo
-
-Frontend: (Add Netlify link after deployment)  
-Backend API: (Add Render link after deployment)
-
----
-
 ## 📌 Future Improvements
 
 - PostgreSQL for production
